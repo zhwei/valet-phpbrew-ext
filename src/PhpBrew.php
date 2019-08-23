@@ -5,6 +5,7 @@ namespace Zhwei\ValetPhpBrewExt;
 use Valet\Brew;
 use Valet\Configuration;
 use function Valet\info;
+use function Valet\output;
 use function Valet\table;
 use function Valet\warning;
 
@@ -48,6 +49,7 @@ class PhpBrew
         $phpDir = $this->phpBrewRoot . "/php/php-{$version}";
         if (!file_exists($phpDir)) {
             warning("php version {$version} not found in {$phpDir}");
+            $this->showAvailablePhpVersions();
             return;
         }
 
@@ -57,8 +59,10 @@ class PhpBrew
 
         $socket = $this->getSocketPath($version);
         if (!file_exists($socket)) {
-            warning("socket not found: {$socket}");
-            warning("please try `phpbrew fpm restart`");
+            warning("socket file not found: {$socket}");
+            warning('may be fpm service not start, try `phpbrew fpm start`');
+            warning("");
+            $this->showAvailablePhpVersions();
             return;
         }
 
@@ -84,6 +88,21 @@ class PhpBrew
         info("nginx config create success, try visit: http://{$domain}");
     }
 
+    protected function showAvailablePhpVersions()
+    {
+        $versions = [];
+        foreach (new \DirectoryIterator($this->phpBrewRoot . '/php/') as $dir) {
+            if (strpos($dir->getFilename(), 'php-') === 0) {
+                $versions[] = [
+                    'version' => substr($dir->getFilename(), 4),
+                    'fpm' => file_exists($dir->getPathname() . "/sbin/php-fpm") ? '' : 'fpm not install',
+                ];
+            }
+        }
+        output('Available PHP versions');
+        table(['version', 'fpm'], $versions);
+    }
+
     public function links()
     {
         $it = new \DirectoryIterator(VALET_HOME_PATH . '/Nginx');
@@ -91,14 +110,16 @@ class PhpBrew
         foreach ($it as $file) {
             if (strpos($file->getFilename(), self::PREFIX) === 0) {
                 $name = substr($file->getFilename(), strlen(self::PREFIX), -5);
+                list($root, $version) = $this->parseRootAndVersion($file->getPathname());
                 $sites[] = [
                     'name' => $name,
                     'url' => "http://{$name}.{$this->getTld()}",
-                    'root' => $this->parseRoot($file->getPathname()),
+                    'version' => $version,
+                    'root' => $root,
                 ];
             }
         }
-        table(['Site', 'Url', 'Path'], $sites);
+        table(['Site', 'Url', 'Version', 'Path'], $sites);
     }
 
     public function unlink($name)
@@ -114,11 +135,15 @@ class PhpBrew
         }
     }
 
-    protected function parseRoot($path)
+    protected function parseRootAndVersion($path)
     {
         $content = file_get_contents($path);
-        preg_match('/root\ (.*);/', $content, $match);
-        return isset($match[1]) ? $match[1] : null;
+        preg_match('/root\ (.*);/', $content, $rootMatch);
+        preg_match('/\/php\/php-(.*)\/var/', $content, $versionMatch);
+        return [
+            isset($rootMatch[1]) ? $rootMatch[1] : null,
+            isset($versionMatch[1]) ? $versionMatch[1] : null,
+        ];
     }
 
     protected function getTld()
