@@ -1,0 +1,20 @@
+{
+    "name": "zhwei/valet-phpbrew-ext",
+    "description": "PHPBrew extension for Laravel Valet",
+    "type": "project",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "zhwei",
+            "email": "zhwei.yes@gmail.com"
+        }
+    ],
+    "require": {
+        "laravel/valet": "^2.3"
+    },
+    "autoload": {
+        "psr-4": {
+            "Zhwei\\ValetPhpBrewExt\\": "src"
+        }
+    }
+}
