@@ -106,7 +106,8 @@ class PhpBrew
         $name = $name ?: basename(getcwd());
         $nginxConfigPath = VALET_HOME_PATH . "/Nginx/" . self::PREFIX . "{$name}.conf";
         if (file_exists($nginxConfigPath)) {
-            $this->unlink($nginxConfigPath);
+            unlink($nginxConfigPath);
+            $this->brew->restartService($this->brew->nginxServiceName());
             info("Site $name unlinked");
         } else {
             warning("Site {$name} not found.");
