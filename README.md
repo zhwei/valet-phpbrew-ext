@@ -1,5 +1,8 @@
 # PHPBrew extension for Laravel Valet
 
+[![Latest Stable Version](https://poser.pugx.org/zhwei/valet-phpbrew-ext/version.png)](https://packagist.org/packages/zhwei/valet-phpbrew-ext)
+[![Total Downloads](https://poser.pugx.org/zhwei/valet-phpbrew-ext/d/total.png)](https://packagist.org/packages/zhwei/valet-phpbrew-ext)
+
 ## Usage
 
 1. Composer install
