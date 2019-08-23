@@ -31,7 +31,7 @@ sudo valet phpbrew:unlink [SITE_NAME]
 
 ## Uninstall
 
-```
+```bash
 # remove extension file
 rm $HOME/.config/valet/Extensions/phpbrew-ext.php
 
