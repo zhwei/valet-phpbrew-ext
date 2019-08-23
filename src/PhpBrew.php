@@ -28,7 +28,7 @@ class PhpBrew
 
     public function __construct(Configuration $config, Brew $brew)
     {
-        $this->phpBrewRoot = $_SERVER['PHPBREW_HOME'];
+        $this->phpBrewRoot = $_SERVER['HOME'] . '/.phpbrew';
         $this->config = $config;
         $this->brew = $brew;
     }
@@ -42,6 +42,12 @@ class PhpBrew
     {
         if (!file_exists(getcwd() . '/public/index.php')) {
             warning('Only support laravel/lumen now');
+            return;
+        }
+
+        $phpDir = $this->phpBrewRoot . "/php/php-{$version}";
+        if (!file_exists($phpDir)) {
+            warning("php version {$version} not found in {$phpDir}");
             return;
         }
 
