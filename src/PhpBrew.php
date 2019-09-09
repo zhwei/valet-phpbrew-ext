@@ -17,6 +17,9 @@ class PhpBrew
      * @var string
      */
     protected $phpBrewRoot;
+
+    protected $defaultPhpVersion;
+
     /**
      * @var Configuration
      */
@@ -30,6 +33,8 @@ class PhpBrew
     public function __construct(Configuration $config, Brew $brew)
     {
         $this->phpBrewRoot = $_SERVER['HOME'] . '/.phpbrew';
+        $this->defaultPhpVersion = $_SERVER['PHPBREW_PHP'];
+
         $this->config = $config;
         $this->brew = $brew;
     }
@@ -43,6 +48,13 @@ class PhpBrew
     {
         if (!file_exists(getcwd() . '/public/index.php')) {
             warning('Only support laravel/lumen now');
+            return;
+        }
+
+        $version = $version ?: $this->defaultPhpVersion;
+        if (!$version) {
+            warning("invalid php version {$version}");
+            $this->showAvailablePhpVersions();
             return;
         }
 

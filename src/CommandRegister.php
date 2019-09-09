@@ -32,7 +32,7 @@ class CommandRegister
 
         $app->command(
             'phpbrew:link phpVersion [name]',
-            function ($phpVersion, $name = null) use ($phpBrew) {
+            function ($phpVersion = null, $name = null) use ($phpBrew) {
                 $phpBrew->link($phpVersion, $name);
             }
         )->descriptions('[PHPBrewExt] 添加站点并指定 PHP 版本');
