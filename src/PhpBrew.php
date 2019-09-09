@@ -33,7 +33,11 @@ class PhpBrew
     public function __construct(Configuration $config, Brew $brew)
     {
         $this->phpBrewRoot = $_SERVER['HOME'] . '/.phpbrew';
-        $this->defaultPhpVersion = $_SERVER['PHPBREW_PHP'];
+        if (isset($_SERVER['_']) && strpos($_SERVER['_'], $this->phpBrewRoot) === 0) {
+            $suffix = substr($_SERVER['_'], strlen($this->phpBrewRoot) + 5);
+            $version = explode('/', $suffix)[0];
+            $this->defaultPhpVersion = $version;
+        }
 
         $this->config = $config;
         $this->brew = $brew;
@@ -58,6 +62,10 @@ class PhpBrew
             return;
         }
 
+        if (strpos($version, 'php-') === 0) {
+            $version = substr($version, 4);
+        }
+
         $phpDir = $this->phpBrewRoot . "/php/php-{$version}";
         if (!file_exists($phpDir)) {
             warning("php version {$version} not found in {$phpDir}");
@@ -78,10 +86,6 @@ class PhpBrew
             return;
         }
 
-        info("domain: {$domain}");
-        info("web root: {$root}");
-        info("fpm socket: {$socket}");
-
         $replaces = [
             'DOMAIN' => $domain,
             'ROOT' => $root,
@@ -97,7 +101,14 @@ class PhpBrew
 
         $this->brew->restartService($this->brew->nginxServiceName());
 
-        info("nginx config create success, try visit: http://{$domain}");
+        info("link create success");
+        table([
+            ['domain', $domain],
+            ['php version', $version],
+            ['web root', $root],
+            ['fpm socket', $socket],
+            ['url', "http://{$domain}"],
+        ]);
     }
 
     protected function showAvailablePhpVersions()
@@ -162,6 +173,5 @@ class PhpBrew
     {
         return $this->config->read()['tld'];
     }
-
 
 }

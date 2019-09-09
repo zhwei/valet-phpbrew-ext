@@ -31,7 +31,7 @@ class CommandRegister
         $phpBrew = Container::getInstance()->make(PhpBrew::class);
 
         $app->command(
-            'phpbrew:link phpVersion [name]',
+            'phpbrew:link [phpVersion] [name]',
             function ($phpVersion = null, $name = null) use ($phpBrew) {
                 $phpBrew->link($phpVersion, $name);
             }
