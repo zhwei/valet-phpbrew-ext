@@ -51,13 +51,13 @@ class PhpBrew
     public function link($version, $name)
     {
         if (!file_exists(getcwd() . '/public/index.php')) {
-            warning('Only support laravel/lumen now');
+            warning('Only support laravel/lumen for now');
             return;
         }
 
         $version = $version ?: $this->defaultPhpVersion;
         if (!$version) {
-            warning("invalid php version {$version}");
+            warning("Invalid php version [{$version}]");
             $this->showAvailablePhpVersions();
             return;
         }
@@ -68,7 +68,7 @@ class PhpBrew
 
         $phpDir = $this->phpBrewRoot . "/php/php-{$version}";
         if (!file_exists($phpDir)) {
-            warning("php version {$version} not found in {$phpDir}");
+            warning("PHP version {$version} not found in {$phpDir}");
             $this->showAvailablePhpVersions();
             return;
         }
@@ -79,9 +79,8 @@ class PhpBrew
 
         $socket = $this->getSocketPath($version);
         if (!file_exists($socket)) {
-            warning("socket file not found: {$socket}");
-            warning('may be fpm service not start, try `phpbrew fpm start`');
-            warning("");
+            warning("Socket file not found: {$socket}");
+            warning('May be fpm service not start, try `phpbrew fpm start`');
             $this->showAvailablePhpVersions();
             return;
         }
@@ -101,7 +100,7 @@ class PhpBrew
 
         $this->brew->restartService($this->brew->nginxServiceName());
 
-        info("link create success");
+        info("Link create success");
         table([
             ['domain', $domain],
             ['php version', $version],
@@ -122,7 +121,9 @@ class PhpBrew
                 ];
             }
         }
-        output('Available PHP versions');
+        output("");
+        output('Tips: run `phpbrew use VERSION` to enable target version, or run `phpbrew:list VERSION` with version argument.');
+        output('Available PHP versions:');
         table(['version', 'fpm'], $versions);
     }
 

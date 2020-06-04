@@ -35,13 +35,19 @@ class CommandRegister
             function ($phpVersion = null, $name = null) use ($phpBrew) {
                 $phpBrew->link($phpVersion, $name);
             }
-        )->descriptions('[PHPBrewExt] 添加站点并指定 PHP 版本');
+        )->descriptions(
+            '[PHPBrewExt] Add site use the specified PHP version',
+            [
+                'phpVersion' => "(optional) if not provide, will parse from \$_SERVER['_']",
+                'name' => "(optional) if not provide, will use current folder name",
+            ]
+        );
 
         $app->command('phpbrew:links', [$phpBrew, 'links'])
-            ->descriptions('[PHPBrewExt] 列出所有站点');
+            ->descriptions('[PHPBrewExt] List all sites created by phpbrew extension');
 
         $app->command('phpbrew:unlink [name]', function ($name = null) use ($phpBrew) {
             $phpBrew->unlink($name);
-        })->descriptions('[PHPBrewExt] 移除站点');
+        })->descriptions('[PHPBrewExt] Remove site, `name` default is current folder name.');
     }
 }
