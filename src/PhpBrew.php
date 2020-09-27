@@ -117,7 +117,7 @@ class PhpBrew
             if (strpos($dir->getFilename(), 'php-') === 0) {
                 $versions[] = [
                     'version' => substr($dir->getFilename(), 4),
-                    'fpm' => file_exists($dir->getPathname() . "/sbin/php-fpm") ? '' : 'fpm not install',
+                    'fpm' => file_exists($dir->getPathname() . "/sbin/php-fpm") ? '' : 'fpm not installed',
                 ];
             }
         }
