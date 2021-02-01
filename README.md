@@ -24,7 +24,7 @@ ln -s $HOME/.composer/vendor/zhwei/valet-phpbrew-ext/phpbrew-ext.php $HOME/.conf
 # create site (PHP_VERSION and SITE_NAME is optional)
 sudo valet phpbrew:link [PHP_VERSION] [SITE_NAME]
 
-# list sites create by phpbrew:link
+# list sites created by phpbrew:link
 sudo valet phpbrew:links
 
 # unlink site (SITE_NAME is optional)
